@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+ 
+    <title>测试一下websocket</title>
+  </head>
+  <body>
+    <script>
+        var ws = new WebSocket('ws://localhost:2333');
+
+
+        ws.onopen = function (){
+            ws.send('来自客户端的信息;从客户端发给服务端!');
+        }
+        ws.onmessage = function (e){
+          console.log(e.data);
+        }
+        ws.onclose = function (){
+          ws.close();//关闭连接
+        }
+    </script>
+    <div id="root"></div>
+   
+  </body>
+</html>
