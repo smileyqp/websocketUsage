@@ -7,32 +7,55 @@
     <title>测试一下websocket</title>
   </head>
   <body>
-    <script>
-        var ws = new WebSocket('ws://localhost:2333');
-
-
-        ws.onopen = function (){
-          //ws.send(document.getElementById('text').value);
-          document.getElementById('btn').onclick = () => {
-            //console.log(document.getElementById('text').value);
-            ws.send(document.getElementById('text').value);
-          }
-        }
-        ws.onmessage = function (e){
-          //console.log(e.data);
-            //document.body.innerHTML += '<p>'+e.data + '</p>';
-            var p =document.createElement('p');
-            p.innerHTML = e.data;
-            document.body.appendChild(p);
-        }
-        ws.onclose = function (){
-          ws.close();//关闭连接
-        }
-    </script>
+    
+  <input id='name' type='text'>
+  <button id='setname' type='button'>设置</button>
 
     <input id='text' type='text'>
     <button id='btn' type='submit'>发送</button>
     <div id="root"></div>
-   
+    <script>
+        var ws = null;
+
+
+        document.getElementById('setname').onclick = function() {
+          var name = document.getElementById('name').value;
+          if(name === null){
+            alert('注意用户名不能为空');
+          }
+          console.log(name);
+          ws =new WebSocket('ws://localhost:2333');
+          ws.onopen = function (){          
+            ws.send(JSON.stringify({name:name,type:'setname'}));
+            document.getElementById('btn').onclick = () => {
+              //console.log(document.getElementById('text').value);
+              ws.send(JSON.stringify({text:document.getElementById('text').value,type:'chat'}));
+            }  
+          }
+          ws.onmessage = function (e){
+          //console.log(e.data);
+            //document.body.innerHTML += '<p>'+e.data + '</p>';
+            var p =document.createElement('p');
+            p.innerHTML = e.data;
+            document.getElementById('root').appendChild(p);
+          }
+           document.getElementById('setname').style.display = 'none';
+        }
+
+
+       
+        // ws.onopen = function (){
+        //   //ws.send(document.getElementById('text').value);
+        //   document.getElementById('btn').onclick = () => {
+        //     //console.log(document.getElementById('text').value);
+        //     ws.send(document.getElementById('text').value);
+        //   }
+        // }
+       
+        // ws.onclose = function (){
+        //   ws.close();//关闭连接
+        // }
+    </script>
+
   </body>
 </html>

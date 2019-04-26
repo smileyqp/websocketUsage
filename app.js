@@ -5,11 +5,27 @@ var server = ws.createServer(function(conn){
     conn.on('text',function(str){
         console.log(str);
         //conn.sendText(str);//将接收道德str用sendText方法传给接收到的一个连接
-        boardcast(str);//调用广播方法将节后到的传给所有的浏览器
+        //boardcast(str);//调用广播方法将节后到的传给所有的浏览器
+
+        var data = JSON.parse(str);
+        switch (data.type){
+            case 'chat':
+                boardcast(conn.nickname + '说:' + data.text);
+                //boardcast(JSON.stringify({name:conn.nickname,text:data.text}));
+                break;                
+            case 'setname':
+                conn.nickname = data.name;
+                boardcast(data.name+'加入了房间');
+                break;
+        }
+            
     });
     // setTimeout(function(){
     //     conn.sendText('来自服务端的消息!');
     // },3000);
+    conn.on('close',function(){
+        boardcast(conn.nickname+'退出了房间');
+    });
     conn.on('error',function(err){
         console.log(err);
     });
