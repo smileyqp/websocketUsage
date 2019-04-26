@@ -10,12 +10,13 @@ var server = ws.createServer(function(conn){
         var data = JSON.parse(str);
         switch (data.type){
             case 'chat':
-                boardcast(conn.nickname + '说:' + data.text);
-                //boardcast(JSON.stringify({name:conn.nickname,text:data.text}));
+                //boardcast(conn.nickname + '说:' + data.text);
+                boardcast(JSON.stringify({name:conn.nickname,text:conn.nickname + '说:' + data.text}));
                 break;                
             case 'setname':
                 conn.nickname = data.name;
-                boardcast(data.name+'加入了房间');
+                //boardcast(data.name+'加入了房间');
+                boardcast(JSON.stringify({text:data.name+'加入了房间',name:conn.nickname}));
                 break;
         }
             
@@ -24,7 +25,7 @@ var server = ws.createServer(function(conn){
     //     conn.sendText('来自服务端的消息!');
     // },3000);
     conn.on('close',function(){
-        boardcast(conn.nickname+'退出了房间');
+        boardcast(JSON.stringify({name:conn.nickname,text:conn.nickname+'退出了房间'}));
     });
     conn.on('error',function(err){
         console.log(err);
